@@ -4,10 +4,11 @@ import catchAsyncError from "../middlewares/catchAsyncError.js"
 import Product from "../models/product.js"
 
 // get Product => /api/products
-export const getProducts = async (req, res) => {
+export const getProducts = async (req, res, next) => {
 
     const resPerPage = 4
     const apiFilters = new APIFilters(Product, req.query).search().filters()
+
     let products = await apiFilters.query
     let filteredProductCount = products.length
 
@@ -22,13 +23,15 @@ export const getProducts = async (req, res) => {
 }
 
 // Create new Product => /api/admin/products
-export const newProducts = async (req, res) => {
-    const product = await Product.create(req.body)
+export const newProduct = catchAsyncError(async (req, res) => {
 
+    req.body.user = req.user._id
+    const product = await Product.create(req.body);
+   
     res.status(200).json({
-        product,
-    })
-}
+      product,
+    });
+  });
 
 // Get a single Product details => /api/products/:id
 export const getProductDetails = catchAsyncError(async (req, res, next) => {
@@ -73,6 +76,92 @@ export const deleteProduct = catchAsyncError(async (req, res) => {
     
     res.status(200).json({
         message: "Product Deleted"
+    })
+})
+
+// CREATE/UPDATE Product REVIEW => /api/reviews
+export const createProductReview = catchAsyncError(async (req, res, next) => {
+
+    const { rating, comment, productId} = req.body
+
+    const review = {
+        user: req?.user?._id,
+        rating: Number(rating),
+        comment
+    }
+    const product = await Product.findById(productId)
+    
+    if (!product) {
+        return next(new ErrorHandler("Product not found", 404))
+    
+        }
+
+    const isReviewed = product?.reviews?.find(
+        (r) => r.user.toString() === req?.user?._id.toString()
+    )
+
+    if (isReviewed) {
+        product.reviews.forEach((review) => {
+            if (review?.user?.toString() === req?.user?._id.toString()) {
+                review.comment = comment
+                review.ratings = rating
+            }
+        })
+    } else {
+        product.reviews.push(review)
+        product.numOfReviews = product.reviews.length
+    }
+
+    product.ratings = product.reviews.reduce((accumulator, item) => item.ratings + accumulator, 0) / product.reviews.length
+    
+    await product.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+        success: "Product Review added Successfully"
+    })
+})
+
+// GET Product REVIEW => /api/reviews
+export const getProductReview = catchAsyncError(async (req, res, next) => {
+    const product = await Product.findById(req.query.id)
+
+    if (!product) {
+        return next(new ErrorHandler("Product not found", 404))
+    
+        }
+
+    res.status(200).json({
+        reviews: product.reviews
+    })
+})
+
+
+// DELETE Product REVIEW => /api/admin/reviews
+export const deleteProductReview = catchAsyncError(async (req, res, next) => {
+
+    let product = await Product.findById(req.query.productId)
+    
+    if (!product) {
+        return next(new ErrorHandler("Product not found", 404))
+    
+        }
+
+    const reviews = product?.reviews?.filter(
+        (review) => review._id.toString() !== req?.query?.id.toString()
+    )
+
+   const numOfReviews = reviews.length
+
+    ratings = numOfReviews === 0 ? 0 : product.reviews.reduce((accumulator, item) => item.ratings + accumulator, 0) / numOfReviews
+    
+    product = await Product.findByIdAndUpdate(req.query.productId, { reviews, numOfReviews, ratings}, { new: true })
+    // await product.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+        success: "Product Review deleted Successfully",
+        //OPTIONAL
+        // product 
+    
     })
 })
 
