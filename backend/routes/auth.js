@@ -4,7 +4,8 @@ import { registerUser, loginUser, logoutUser, forgotPassword, resetPassword,
     getUserProfile, updatePassword, updateProfile, allUsers, 
     getUserDetails,
     updateUser,
-    deleteUser} from "../controllers/authControllers.js"
+    deleteUser,
+    uploadAvatar} from "../controllers/authControllers.js"
 
 const router = express.Router()
 
@@ -18,6 +19,7 @@ router.route("/password/reset/:token").put(resetPassword)
 router.route("/me").get(isAuthenticated, getUserProfile)
 router.route("/me/update").put(isAuthenticated, updateProfile)
 router.route("/password/update").put(isAuthenticated, updatePassword)
+router.route("/me/upload_avatar").put(isAuthenticated, uploadAvatar)
 
 router.route("/admin/users").get(isAuthenticated, authorizeRoles("admin"), allUsers)
 // router.route("/admin/users/:id").get(isAuthenticated, authorizeRoles("admin"), getUserDetails)

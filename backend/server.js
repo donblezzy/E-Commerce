@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import productRoutes from './routes/products.js'
 import authRoutes from './routes/auth.js'
 import orderRoutes from './routes/order.js'
+import paymentRoutes from './routes/payment.js'
 import { connectDatabase } from "./config/dbConnect.js";
 import errorMiddleware from "./middlewares/error.js";
 
@@ -13,7 +14,9 @@ const app = express();
 // Connecting Database
 connectDatabase()
 
-app.use(express.json())
+app.use(express.json({ limit: "10mb", verify: (req, res, buf) => {
+    req.rawBody = buf.toString()
+}}))
 app.use(cookieParser())
 
 // Importing ProductRoutes
@@ -22,6 +25,8 @@ app.use('/api', productRoutes)
 app.use('/api', authRoutes)
 // Importing orderRoutes
 app.use('/api', orderRoutes)
+// Importing paymentRoutes
+app.use('/api', paymentRoutes)
 
 // Using error Middleware
 app.use(errorMiddleware)

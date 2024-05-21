@@ -20,6 +20,4 @@ router.route("/reviews").put(isAuthenticated, createProductReview)
 router.route("/admin/reviews").delete(isAuthenticated, authorizeRoles("admin"),  deleteProductReview)
 
 
-
-
 export default router

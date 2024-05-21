@@ -1,3 +1,4 @@
+import { delete_file, upload_file } from "../Utils/cloudinary.js";
 import { getResetPasswordTemplate } from "../Utils/emailTemplate.js";
 import ErrorHandler from "../Utils/errorHandler.js";
 import sendEmail from "../Utils/sendEmail.js";
@@ -56,6 +57,23 @@ export const logoutUser = catchAsyncError(async (req, res, next) => {
   });
 });
 
+
+// Upload User Avatar => /api/me/upload_avatar
+export const uploadAvatar = catchAsyncError(async (req, res, next) => {
+  const avatarResponse = await upload_file(req.body.avatar, "shopIT/avatars")
+
+  // Remove Previous Avatar 
+  if (req?.user?.avatar?.url) {
+    await delete_file(req?.user?.avatar?.public_id)
+  }
+  const user = await User.findByIdAndUpdate(req?.user?._id, {
+    avatar: avatarResponse,
+  })
+
+  res.status(200).json({
+    user,
+  });
+});
 // FORGOT PASSWORD => /api/password/forgot
 export const forgotPassword = catchAsyncError(async (req, res, next) => {
   // Find User in the database
@@ -71,7 +89,10 @@ export const forgotPassword = catchAsyncError(async (req, res, next) => {
   await user.save();
 
   // CREATE RESET PASSWORD URL
-  const resetUrl = `${process.env.FRONTEND_URL}/api/password/reset/${resetToken}`;
+   // Backend
+  // const resetUrl = `${process.env.FRONTEND_URL}/api/password/reset/${resetToken}`;
+   // frontend 
+  const resetUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
 
   const message = getResetPasswordTemplate(user?.name, resetUrl);
 
