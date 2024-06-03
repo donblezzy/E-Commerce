@@ -3,7 +3,8 @@ import { getProductDetails,
     getProducts, 
     newProduct, 
     updateProduct, 
-    deleteProduct, createProductReview, getProductReview, deleteProductReview } from "../controllers/productControllers.js"
+    deleteProduct, createProductReview, getProductReview, deleteProductReview, 
+    canUserReview} from "../controllers/productControllers.js"
 import { isAuthenticated, authorizeRoles } from "../middlewares/protect.js"
 
 const router = express.Router()
@@ -18,6 +19,7 @@ router.route("/admin/products/:id").delete(isAuthenticated, authorizeRoles("admi
 router.route("/reviews").get(isAuthenticated, getProductReview)
 router.route("/reviews").put(isAuthenticated, createProductReview)
 router.route("/admin/reviews").delete(isAuthenticated, authorizeRoles("admin"),  deleteProductReview)
+router.route("/can_review").get(isAuthenticated, canUserReview)
 
 
 export default router

@@ -114,3 +114,49 @@ export const deleteOrder = catchAsyncError(async (req, res, next) => {
     })
 })
 
+
+async function getSalesData(startDate, endDate) {
+
+    const salesData = await Order.aggregate([
+        {
+            // Stage 1 - Filter results
+            $match: {
+                createdAt: {
+                    $gte: new Date(startDate),
+                    $lte: new Date(endDate)
+                }
+            }
+        },
+
+        {
+            // Stage 2 - Group Data
+            $group: {
+                _id: {
+                    date: { $dateToString: { format:"%d-%m-%Y", date: "$createdAt" }}
+                },
+                totalSales: { $sum: "$totalAmount"},
+                numOrder: { $sum: 1} // Count the number of orders
+            }
+        }
+    ])
+
+    console.log(salesData);
+}
+
+// Get Sales Data => /api/admin/get_sales
+export const getSales = catchAsyncError(async (req, res, next) => {
+
+    const startDate = new Date(req.query.startDate)
+    const endDate = new Date(req.query.endDate)
+
+    startDate.setHours(0, 0, 0, 0)
+    endDate.setHours(23, 59, 59, 999)
+
+    getSalesData(startDate, endDate)
+
+    res.status(200).json({
+        success: "true"
+    })
+})
+
+

@@ -2,6 +2,7 @@ import APIFilters from "../Utils/apiFilter.js";
 import ErrorHandler from "../Utils/errorHandler.js";
 import catchAsyncError from "../middlewares/catchAsyncError.js";
 import Product from "../models/product.js";
+import Order from "../models/order.js";
 
 // get Product => /api/products
 export const getProducts = async (req, res, next) => {
@@ -33,7 +34,7 @@ export const newProduct = catchAsyncError(async (req, res) => {
 
 // Get a single Product details => /api/products/:id
 export const getProductDetails = catchAsyncError(async (req, res, next) => {
-  const product = await Product.findById(req?.params?.id);
+  const product = await Product.findById(req?.params?.id).populate("reviews.user");
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
@@ -43,22 +44,22 @@ export const getProductDetails = catchAsyncError(async (req, res, next) => {
   });
 });
 
-// Update Product details => /api/products/:id
-export const updateProduct = catchAsyncError(async (req, res) => {
-  let product = await Product.findById(req?.params?.id);
+  // Update Product details => /api/products/:id
+  export const updateProduct = catchAsyncError(async (req, res) => {
+    let product = await Product.findById(req?.params?.id);
 
-  if (!product) {
-    return next(new ErrorHandler("Product not found", 404));
-  }
+    if (!product) {
+      return next(new ErrorHandler("Product not found", 404));
+    }
 
-  product = await Product.findByIdAndUpdate(req?.params?.id, req.body, {
-    new: true,
+    product = await Product.findByIdAndUpdate(req?.params?.id, req.body, {
+      new: true,
+    });
+
+    res.status(200).json({
+      product,
+    });
   });
-
-  res.status(200).json({
-    product,
-  });
-});
 
 // Delete Product => /api/products/:id
 export const deleteProduct = catchAsyncError(async (req, res) => {
@@ -167,3 +168,20 @@ export const deleteProductReview = catchAsyncError(async (req, res, next) => {
     // product
   });
 });
+
+
+  // Can User Review => /api/can_review
+  export const canUserReview = catchAsyncError(async (req, res) => {
+    const orders = await Order.find({
+      user: req.user._id,
+      "orderItems.product": req.query.productId
+    })
+
+    if (orders.length === 0) {
+      return res.status(200).json({ canReview: false});
+    }
+
+    res.status(200).json({
+      canReview: true
+    });
+  });

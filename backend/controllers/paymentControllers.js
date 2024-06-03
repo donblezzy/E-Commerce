@@ -1,6 +1,6 @@
 import catchAsyncError from "../middlewares/catchAsyncError.js";
+import Order from '../models/order.js'
 import Stripe from "stripe";
-import product from "../models/product.js";
 
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -33,7 +33,7 @@ export const stripeCheckoutSession = catchAsyncError(async (req, res, next) => {
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    success_url: `${process.env.FRONTEND_URL}/me/orders`,
+    success_url: `${process.env.FRONTEND_URL}/me/orders?order_success=true`,
     cancel_url: `${process.env.FRONTEND_URL}`,
     customer_email: req?.user?.email,
     client_reference_id: req?.user?._id?.toString(),
@@ -47,7 +47,7 @@ export const stripeCheckoutSession = catchAsyncError(async (req, res, next) => {
     line_items,
   });
 
-  console.log(session);
+  // console.log(session);
   res.status(200).json({
     url: session.url
   })
@@ -57,13 +57,9 @@ const getOrderItems = async (line_items) => {
   return new Promise((resolve, reject) => {
     let cartItems = []
 
-    line_items?.data?.forEach[async (item) => {
+    line_items?.data?.forEach(async (item) => {
       const product = await stripe.products.retrieve(item.price.product)
       const productId = product.metadata.productId
-
-      console.log('item', item);
-      console.log('product', product);
-      
 
       cartItems.push({
         product: productId,
@@ -76,7 +72,7 @@ const getOrderItems = async (line_items) => {
       if (cartItems.length === line_items?.data?.length) {
         resolve(cartItems)
       }
-    }]
+    })
   })
 }
 
@@ -84,6 +80,7 @@ const getOrderItems = async (line_items) => {
 export const stripeWebhook = catchAsyncError(async (req, res, next) => {
   try {
     const signature = req.headers["stripe-signature"]
+
     const event = stripe.webhooks.constructEvent(req.rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET)
     if (event.type === "checkout.session.completed") {
 
@@ -91,7 +88,39 @@ export const stripeWebhook = catchAsyncError(async (req, res, next) => {
 
       const line_items = await stripe.checkout.sessions.listLineItems(session.id)
       const orderItems = await getOrderItems(line_items)
-      console.log(orderItems);
+      const user = session.client_reference_id
+
+      const totalAmount = session.amount_total / 100
+      const taxAmount = session.total_details.amount_tax / 100
+      const shippingAmount = session.total_details.amount_shipping
+      const itemsPrice = session.metadata.itemsPrice
+
+      const shippingInfo = {
+        address: session.metadata.address,
+        city: session.metadata.city,
+        phoneNo: session.metadata.phoneNo,
+        zipCode: session.metadata.zipCode,
+        country: session.metadata.country,
+      }
+
+      const paymentInfo = {
+        id: session.payment_intent,
+        status: session.payment_status
+      }
+
+      const orderData = {
+        shippingInfo,
+        orderItems,
+        itemsPrice,
+        taxAmount,
+        shippingAmount,
+        totalAmount,
+        paymentInfo,
+        paymentMethod: "Card",
+        user
+      }
+
+      await Order.create(orderData)
 
       res.status(200).json({ success: true })
     }
