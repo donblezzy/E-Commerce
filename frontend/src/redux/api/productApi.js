@@ -1,25 +1,25 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export const productApi = createApi({
     reducerPath: 'productApi',
-    baseQuery: fetchBaseQuery({baseUrl: "/api"}),
+    baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
     tagTypes: ["Product"],
     endpoints: (builder) => ({
         getProducts: builder.query({
             query: (params) => ({
-            url:"/products",
-            params: {
-                page: params?.page,
-                keyword: params?.keyword,
-                category: params?.category,
-                "price[gte]": params.min,
-                "price[lte]": params.max,
-                "ratings[gte]": params.ratings
-            }
-        }),
+                url: "/products",
+                params: {
+                    page: params?.page,
+                    keyword: params?.keyword,
+                    category: params?.category,
+                    "price[gte]": params.min,
+                    "price[lte]": params.max,
+                    "ratings[gte]": params.ratings
+                }
+            }),
         }),
         getProductDetails: builder.query({
-            query: (id) =>  `/products/${id}`,
+            query: (id) => `/products/${id}`,
             providesTags: ["Product"]
         }),
 
@@ -30,17 +30,36 @@ export const productApi = createApi({
                     method: "PUT",
                     body
                 }
-               
+
             },
 
             invalidatesTags: ["Product"]
         }),
 
         canUserReview: builder.query({
-            query: (productId) =>  `/can_review/?productId=${productId}`,
+            query: (productId) => `/can_review/?productId=${productId}`,
         }),
-       
+
+        getAdminProducts: builder.query({
+            query: () => `/admin/products`,
+        }),
+
+        createProduct: builder.mutation({
+            query(body) {
+                return {
+                    url: "/admin/products",
+                    method: "POST",
+                    body
+                }
+
+            },
+        }),
     })
 })
 
-export const { useGetProductsQuery, useGetProductDetailsQuery, useSubmitReviewMutation, useCanUserReviewQuery } = productApi
+export const { useGetProductsQuery,
+     useGetProductDetailsQuery, 
+     useSubmitReviewMutation, 
+     useCanUserReviewQuery, 
+     useGetAdminProductsQuery,
+    useCreateProductMutation } = productApi

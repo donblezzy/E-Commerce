@@ -30,7 +30,7 @@ const AdminLayout = ({children}) => {
             icon: "fas fa-user"
         },
         {
-            name: "Reviewss",
+            name: "Reviews",
             url: "/admin/reviews",
             icon: "fas fa-star"
         }

@@ -4,13 +4,15 @@ import { getProductDetails,
     newProduct, 
     updateProduct, 
     deleteProduct, createProductReview, getProductReview, deleteProductReview, 
-    canUserReview} from "../controllers/productControllers.js"
+    canUserReview,
+    getAdminProducts} from "../controllers/productControllers.js"
 import { isAuthenticated, authorizeRoles } from "../middlewares/protect.js"
 
 const router = express.Router()
 
 router.route("/products").get(getProducts)
 router.route("/admin/products").post(isAuthenticated, authorizeRoles("admin"), newProduct)
+router.route("/admin/products").get(isAuthenticated, authorizeRoles("admin"), getAdminProducts)
 
 router.route("/products/:id").get(getProductDetails)
 router.route("/admin/products/:id").put(isAuthenticated, authorizeRoles("admin"), updateProduct)
