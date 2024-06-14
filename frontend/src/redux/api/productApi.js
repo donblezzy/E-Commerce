@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 export const productApi = createApi({
     reducerPath: 'productApi',
     baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
-    tagTypes: ["Product"],
+    tagTypes: ["Product", "AdminProduct", "Reviews"],
     endpoints: (builder) => ({
         getProducts: builder.query({
             query: (params) => ({
@@ -42,6 +42,7 @@ export const productApi = createApi({
 
         getAdminProducts: builder.query({
             query: () => `/admin/products`,
+            providesTags: ["AdminProducts"]
         }),
 
         createProduct: builder.mutation({
@@ -53,6 +54,75 @@ export const productApi = createApi({
                 }
 
             },
+            invalidatesTags: ["Product", "AdminProducts"],
+        }),
+
+        updateProduct: builder.mutation({
+            query({id, body}) {
+                return {
+                    url: `/admin/products/${id}`,
+                    method: "PUT",
+                    body
+                }
+
+            },
+
+            invalidatesTags: ["Product", "AdminProducts"],
+        }),
+
+        uploadProductImages: builder.mutation({
+            query({id, body}) {
+                return {
+                    url: `/admin/products/${id}/upload_images`,
+                    method: "PUT",
+                    body
+                }
+
+            },
+
+            invalidatesTags: ["Product"],
+        }),
+
+        deleteProductImage: builder.mutation({
+            query({id, body}) {
+                return {
+                    url: `/admin/products/${id}/delete_image`,
+                    method: "PUT",
+                    body
+                }
+
+            },
+
+            invalidatesTags: ["Product"],
+        }),
+
+        deleteProduct: builder.mutation({
+            query(id) {
+                return {
+                    url: `/admin/products/${id}`,
+                    method: "DELETE",
+                }
+
+            },
+
+            invalidatesTags: ["AdminProducts", "Product"],
+        }),
+
+        getProductReviews: builder.query({
+            query: (productId) => `/reviews?id=${productId}`,
+            providesTags: ["Reviews"]
+        }),
+
+        deleteProductReview: builder.mutation({
+            query({productId, id}) {
+                return {
+                    url: `/admin/reviews?productId=${productId}&id=${id}`,
+                    method: "DELETE",
+                }
+
+            },
+
+            invalidatesTags: ["Reviews"],
         }),
     })
 })
@@ -62,4 +132,8 @@ export const { useGetProductsQuery,
      useSubmitReviewMutation, 
      useCanUserReviewQuery, 
      useGetAdminProductsQuery,
-    useCreateProductMutation } = productApi
+    useCreateProductMutation, 
+    useUpdateProductMutation, 
+    useUploadProductImagesMutation, 
+    useDeleteProductImageMutation, 
+    useDeleteProductMutation, useLazyGetProductReviewsQuery, useDeleteProductReviewMutation } = productApi

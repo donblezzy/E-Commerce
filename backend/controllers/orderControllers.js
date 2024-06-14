@@ -77,12 +77,20 @@ export const updateOrder = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler("You have already delivered this order", 404))
     }
 
+    let productNotFound = false
+
     // SUBTRACTING THE ORDER FROM THE PRODUCTLIST/ UPDATING PRODUCTS STOCK AFTER SHIPPING THE ORDER
+    // for ( const item of order.orderItems ) {
     order?.orderItems?.forEach(async (item) => {
         const product = await Product.findById(item?.product?.toString())
 
+        // if (!product) {
+        //     productNotFound = true
+        //     break
+        // }
+
         if(!product) {
-            return next(new ErrorHandler("No Product found with this ID", 404))
+            return next(new ErrorHandler("No Product found with ID", 404))
         }
 
         product.stock = product.stock - item.quantity

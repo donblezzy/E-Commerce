@@ -32,7 +32,7 @@ const OrderDetails = () => {
       <div className="col-12 col-lg-9 mt-5 order-details">
         <div className="d-flex justify-content-between align-items-center">
           <h3 className="mt-5 mb-4">Your Order Details</h3>
-          <Link className="btn btn-success" to="/invoice/order/order-id">
+          <Link className="btn btn-success" to={`/invoice/order/${order?._id}`}>
             <i className="fa fa-print"></i> Invoice
           </Link>
         </div>
@@ -50,7 +50,7 @@ const OrderDetails = () => {
             </tr>
             <tr>
               <th scope="row">Date</th>
-              <td>{new Date(data?. createdAt).toLocaleString("en-US")}</td>
+              <td>{new Date(data?.createdAt).toLocaleString("en-US")}</td>
             </tr>
           </tbody>
         </table>
@@ -113,7 +113,7 @@ const OrderDetails = () => {
                 </div>
     
                 <div className="col-5 col-lg-5">
-                  <Link to={`/products/${item?.product}`}>{orderItems?.name}</Link>
+                  <Link to={`/products/${item?.product}`}>{item?.name}</Link>
                 </div>
     
                 <div className="col-4 col-lg-2 mt-4 mt-lg-0">
@@ -121,10 +121,9 @@ const OrderDetails = () => {
                 </div>
     
                 <div className="col-4 col-lg-3 mt-4 mt-lg-0">
-                  <p>{item?.quantity}</p>
+                  <p>{item?.quantity} Piece(s)</p>
                 </div>
               </div>
-
             ))}
         </div>
         <hr />

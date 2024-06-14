@@ -8,6 +8,11 @@ import paymentRoutes from './routes/payment.js'
 import { connectDatabase } from "./config/dbConnect.js";
 import errorMiddleware from "./middlewares/error.js";
 
+import path from "path"
+import { fileURLToPath } from "url";
+const ___filename = fileURLToPath(import.meta.url)
+const ___dirname = path.dirname(___filename)
+
 
 dotenv.config({ path: "backend/config/config.env" });
 const app = express();
@@ -27,6 +32,14 @@ app.use('/api', authRoutes)
 app.use('/api', orderRoutes)
 // Importing paymentRoutes
 app.use('/api', paymentRoutes)
+
+if (process.env.NODE_ENV === "PRODUCTION") {
+    app.use(express.static(path.join(___dirname, "../frontend/build")))
+
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(___dirname, "../frontend/build/index.html"))
+    })
+}
 
 // Using error Middleware
 app.use(errorMiddleware)

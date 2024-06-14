@@ -82,7 +82,8 @@ const Invoice = () => {
                 <span>ADDRESS</span> {shippingInfo?.address}, {shippingInfo?.city}, {shippingInfo?.zipCode}, {shippingInfo?.country}
               </div>
               <div>
-                <span>DATE</span> {new Date(data?. createdAt).toLocaleString("en-US")}
+                <span>DATE</span> {new Date(data?.createdAt).toLocaleString('en-US')}
+                
               </div>
               <div>
                 <span>Status</span> {paymentInfo?.status}

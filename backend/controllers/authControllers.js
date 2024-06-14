@@ -238,6 +238,9 @@ export const deleteUser = catchAsyncError(async (req, res, next) => {
   }
 
   //TODO  - REMOVE USER AVATAR FROM CLOUDINARY
+  if (user?.avatar?.public_id) {
+    await delete_file(user?.avatar?.public_id)
+  }
 
   await user.deleteOne()
 

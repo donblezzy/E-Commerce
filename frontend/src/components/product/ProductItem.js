@@ -13,8 +13,13 @@ const ProductItem = ({ product, columnSize }) => {
       <div className="card p-3 rounded">
         <img
           className="card-img-top mx-auto"
-          src={product.Images[0].url}
-          alt={product.name}
+          // src={product?.Images[0].url}
+          src={
+            product?.Images[0]
+              ? product?.Images[0]?.url
+              : "/images/default_product.png"
+          }
+          alt={product?.name}
         />
         <div className="card-body ps-3 d-flex justify-content-center flex-column">
           <h5 className="card-title">

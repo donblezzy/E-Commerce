@@ -9,6 +9,7 @@ import { setCartItem } from '../../redux/features/cartSlice'
 import MetaData from '../layout/MetaData'
 import NewReview from '../reviews/NewReview'
 import ListReviews from '../reviews/ListReviews'
+import NotFound from '../layout/NotFound'
 
 
 const ProductDetails = () => {
@@ -49,7 +50,7 @@ const ProductDetails = () => {
     const decreaseQty = () => {
       const count = document.querySelector(".count")
 
-      if (count.valueAsNumber <= product.stock) return
+      if (count.valueAsNumber <= 1) return
       const qty = count.valueAsNumber - 1
       setQuantity(qty) 
     }
@@ -69,6 +70,11 @@ const ProductDetails = () => {
     }
 
     if (isLoading) return <Loader />
+
+    if (error && error?.status === 404) {
+      return <NotFound />
+    }
+
 
   return (
     <>
