@@ -1,5 +1,9 @@
 pipeline {
     agent any
+
+    tools {
+        NodeJS "NODEJS-23"
+    }
     
     environment {
         // You can specify global environment variables here, like NODE_ENV
