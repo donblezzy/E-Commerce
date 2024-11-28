@@ -1,3 +1,3 @@
 #!/bin/bash
-chmod +x -R ${env.WORKSPACE}
+chmod +x build.sh
 npm run build
