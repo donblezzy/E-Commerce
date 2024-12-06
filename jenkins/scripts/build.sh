@@ -5,7 +5,8 @@ echo 'production in the local "build" directory (i.e. within the'
 echo '"/var/jenkins_home/workspace/simple-node-js-react-app" directory),'
 echo 'correctly bundles React in production mode and optimizes the build for'
 echo 'the best performance.'
-set -x
+#set -x
+set +x 
 npm run build
 set +x
 
@@ -17,7 +18,8 @@ echo 'can pause running builds of CI/CD applications indefinitely. "npm start"'
 echo 'is followed by another command that retrieves the process ID (PID) value'
 echo 'of the previously run process (i.e. "npm start") and writes this value to'
 echo 'the file ".pidfile".'
-set -x
+#set -x
+set +x 
 npm start &
 sleep 1
 echo $! > .pidfile
