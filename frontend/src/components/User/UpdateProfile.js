@@ -26,6 +26,7 @@ const UpdateProfile = () => {
         toast.success("Profile Updated");
         navigate("/me/profile")
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, error, isSuccess])
 
   const submitHandler = (e) => {
