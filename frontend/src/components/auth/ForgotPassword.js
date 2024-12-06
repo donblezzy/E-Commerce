@@ -24,6 +24,7 @@ const ForgotPassword = () => {
       if (isSuccess) {
         toast.success("Email Sent. Please check your mail")
       }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [error, isAuthenticated, isSuccess]);
   
     const submitHandler = (e) => {
