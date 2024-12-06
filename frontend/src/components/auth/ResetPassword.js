@@ -28,6 +28,7 @@ const ResetPassword = () => {
       }
       if (isSuccess) {
         toast.success("Password Resetted Successfully")
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         navigate("/login")
       }
     }, [error, isAuthenticated, isSuccess]);
