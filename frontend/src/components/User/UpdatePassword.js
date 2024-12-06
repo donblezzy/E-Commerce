@@ -21,6 +21,7 @@ const UpdatePassword = () => {
         toast.success("Password Updated Successfully");
         navigate("/me/profile")
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, isSuccess])
 
   const submitHandler = (e) => {
