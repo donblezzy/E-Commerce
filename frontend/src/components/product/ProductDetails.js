@@ -97,7 +97,7 @@ const ProductDetails = () => {
       <div className="row justify-content-start mt-5">
         {product?.Images?.map((img) => (
            <div className="col-2 ms-4 mt-2">
-           <a href="#" role="button">
+           <a href="javascript:void(0)" role="button">
              <img
              // to show the border warning and to make onclick change the image
                className={`d-block border rounded p-3 cursor-pointer ${img.url === activeImage ? "border-warning" : ""}  `}
