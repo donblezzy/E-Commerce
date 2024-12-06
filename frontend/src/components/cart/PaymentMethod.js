@@ -35,6 +35,7 @@ const PaymentMethod = () => {
     }
 
     if (isSuccess) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       navigate("/me/orders?order_success=true");
     }
   }, [error, isSuccess]);
