@@ -38,6 +38,7 @@ const ProductDetails = () => {
           // eslint-disable-next-line react-hooks/exhaustive-deps
         toast.error(error?.data?.message)
       }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isError])
 
     const increaseQty = () => {
