@@ -47,6 +47,7 @@ const UpdateProduct = () => {
       // eslint-disable-next-line
       navigate("/admin/products")
     }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, isSuccess, data]);
 
   const {name, description, price, category, stock, seller} = product
