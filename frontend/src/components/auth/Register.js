@@ -13,7 +13,7 @@ const Register = () => {
   });
 
   const { name, email, password } = user;
-  const [register, { isLoading, error, data }] = useRegisterMutation();
+  const [register, { isLoading, error }] = useRegisterMutation();
   
   const { isAuthenticated } = useSelector((state) => state.auth)
 
@@ -26,6 +26,7 @@ const Register = () => {
     if (error) {
       toast.error(error?.data?.message);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, isAuthenticated]);
 
   useEffect(() => {
