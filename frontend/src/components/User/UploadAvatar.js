@@ -26,6 +26,7 @@ const UploadAvatar = () => {
             toast.success("Avatar Uploaded");
             navigate("/me/profile")
           }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [error, isSuccess])
     
       const submitHandler = (e) => {
