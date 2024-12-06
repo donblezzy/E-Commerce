@@ -37,7 +37,7 @@ const UploadImages = () => {
           if (deleteError) {
             toast.error(error?.data?.message);
           }
-      
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data, error, isSuccess, deleteError])
 
     const onChange = (e) => {
@@ -65,7 +65,7 @@ const UploadImages = () => {
 
     const handleImagePreviewDelete = (image) => {
         const filteredImagesPreview = imagesPreview.filter(
-            img => img != image
+            img => img !== image
         )
 
         setImages(filteredImagesPreview)
