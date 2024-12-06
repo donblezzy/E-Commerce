@@ -35,6 +35,7 @@ const Hompage = () => {
     if (isError) {
       toast.error(error?.data?.message);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
    // to implement column size
