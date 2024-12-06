@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import AdminLayout from '../layout/AdminLayout'
-import Loader from "../layout/Loader";
 import { toast } from "react-hot-toast";
 import MetaData from "../layout/MetaData"
 import { useNavigate, useParams } from 'react-router-dom';
