@@ -35,6 +35,7 @@ const ProductDetails = () => {
 // to show loading state 
     useEffect(() => {
       if (isError) {
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         toast.error(error?.data?.message)
       }
     }, [isError])
