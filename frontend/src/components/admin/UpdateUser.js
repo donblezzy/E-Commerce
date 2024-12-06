@@ -34,6 +34,7 @@ const UpdateUser = () => {
           toast.success("User Updated Successfully");
           navigate("/admin/users")
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [error, isSuccess])
   
     const submitHandler = (e) => {
