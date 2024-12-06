@@ -15,6 +15,7 @@ const Header = () => {
     if (isSuccess)
       // eslint-disable-next-line
       navigate(0)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [isSuccess])
 
    const { user } = useSelector((state) => state.auth)
