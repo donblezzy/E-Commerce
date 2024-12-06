@@ -25,6 +25,7 @@ const MyOrders = () => {
       dispatch(clearCart())
       navigate("/me/orders")
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [error, orderSuccess]);
 
   const setOrders = () => {

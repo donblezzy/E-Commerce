@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        NodeJS "NODEJS-23"
+        nodejs "nodejs"
     }
     
     environment {
@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     // Run tests using npm (assuming you use a testing framework like Mocha or Jest)
-                    sh 'npm test'
+                    sh './jenkins/scripts/test.sh'
                 }
             }
         }
@@ -61,7 +61,7 @@ pipeline {
             steps {
                 script {
                     // Build the Node.js application (if applicable, e.g., compiling assets)
-                    sh 'npm run build'
+                    sh './jenkins/scripts/build.sh'
                 }
             }
         }

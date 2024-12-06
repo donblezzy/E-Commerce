@@ -35,8 +35,10 @@ const ProductDetails = () => {
 // to show loading state 
     useEffect(() => {
       if (isError) {
+          // eslint-disable-next-line react-hooks/exhaustive-deps
         toast.error(error?.data?.message)
       }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isError])
 
     const increaseQty = () => {
@@ -95,7 +97,7 @@ const ProductDetails = () => {
       <div className="row justify-content-start mt-5">
         {product?.Images?.map((img) => (
            <div className="col-2 ms-4 mt-2">
-           <a role="button">
+           <a href="#" role="button">
              <img
              // to show the border warning and to make onclick change the image
                className={`d-block border rounded p-3 cursor-pointer ${img.url === activeImage ? "border-warning" : ""}  `}
