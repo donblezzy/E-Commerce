@@ -25,6 +25,7 @@ const Dashboard = () => {
         endDate: endDate.toISOString()
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   const submitHandler = () => {
