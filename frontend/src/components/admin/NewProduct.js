@@ -32,6 +32,7 @@ const NewProduct = () => {
       // eslint-disable-next-line
       navigate("/admin/products")
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, isSuccess]);
 
   const {name, description, price, category, stock, seller} = product
