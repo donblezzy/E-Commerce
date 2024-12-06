@@ -22,6 +22,7 @@ const Login = () => {
     if (error) {
       toast.error(error?.data?.message);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error, isAuthenticated]);
 
   const submitHandler = (e) => {
